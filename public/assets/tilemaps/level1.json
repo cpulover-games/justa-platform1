@@ -77,7 +77,7 @@
               "imageheight": 448,
               "imagewidth": 896,
               "margin": 0,
-              "name": "platformPack_tilesheet",
+              "name": "platformPack_tilesheet", 
               "spacing": 0,
               "tilecount": 98,
               "tileheight": 64,
