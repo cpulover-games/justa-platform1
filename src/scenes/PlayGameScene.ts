@@ -4,6 +4,8 @@ import Collision from '~/Collision'
 
 export default class PlayGameScene extends Phaser.Scene {
     private _gameOver: boolean = false
+    private _player?: Phaser.Physics.Arcade.Sprite
+    private _cursors?: Phaser.Types.Input.Keyboard.CursorKeys
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -30,16 +32,66 @@ export default class PlayGameScene extends Phaser.Scene {
         platforms.setCollisionByExclusion([-1], true)
 
 
-        const player: Phaser.Physics.Arcade.Sprite = this.physics.add.sprite(50, 300, TEXTURE.PLAYER)
-        player.setCollideWorldBounds(true)
-        player.setBounce(0.1)
-        this.physics.add.collider(player, platforms)
+        this._player = this.physics.add.sprite(50, 300, TEXTURE.PLAYER)
+        this._player.setCollideWorldBounds(true)
+        this._player.setBounce(0.1)
+        this._player.setGravity(0, 1000)
+        this.physics.add.collider(this._player, platforms)
+
+        this.anims.create({
+            key: 'walk',
+            frames: this.anims.generateFrameNames('player', {
+                prefix: 'robo_player_',
+                start: 2,
+                end: 3,
+            }),
+            frameRate: 10,
+            repeat: -1
+        })
+        this.anims.create({
+            key: 'idle',
+            frames: [{ key: 'player', frame: 'robo_player_0' }],
+            frameRate: 10,
+        })
+        this.anims.create({
+            key: 'jump',
+            frames: [{ key: 'player', frame: 'robo_player_1' }],
+            frameRate: 10,
+        })
+        this._cursors = this.input.keyboard.createCursorKeys();
 
         Collision.setup(this)
     }
 
     update() {
         // controls
+        // Control the player with left or right keys
+        if (this._cursors?.left?.isDown) {
+            this._player?.setVelocityX(-200);
+            if (this._player?.body.touching.down) {
+                this._player?.play('walk', true);
+            }
+        } else if (this._cursors?.right?.isDown) {
+            this._player?.setVelocityX(200);
+            if (this._player?.body.blocked.down) {
+                this._player?.play('walk', true);
+            }
+        } else {
+            // If no keys are pressed, the player keeps still
+            this._player?.setVelocityX(0);
+            // Only show the idle animation if the player is footed
+            // If this is not included, the player would look idle while jumping
+            if (this._player?.body.blocked.down) {
+                this._player?.play('idle', true);
+            }
+        }
+
+        // Player can jump while walking any direction by pressing the space bar
+        // or the 'UP' arrow
+        if ((this._cursors?.space?.isDown || this._cursors?.up?.isDown) && this._player?.body.blocked.down) {
+            this._player?.setVelocityY(-550);
+            this._player?.play('jump', true);
+        }
 
         // game over
         if (this.gameOver) {
@@ -53,5 +105,8 @@ export default class PlayGameScene extends Phaser.Scene {
     }
     set gameOver(state: boolean) {
         this._gameOver = state
+    }
+    get player() {
+        return this._player
     }
 }
