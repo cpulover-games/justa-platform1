@@ -5,19 +5,16 @@ import Player from './elements/Player';
 
 export default class Control {
     private static _cursor?: Phaser.Types.Input.Keyboard.CursorKeys
-    private static _turningLeft: boolean = false
 
     static setup(scene: PlayGameScene, player?: Player) {
         this._cursor = scene.input.keyboard.createCursorKeys()
 
         if (this._cursor?.left?.isDown) {  // left
-            this.flipPlayer(player)
             player?.setVelocityX(-PLAYER.SPEED_X)
             if (player?.body.blocked.down) {
                 player.anims.play(ANIM.PLAYER_TO_LEFT, true)
             }
         } else if (this._cursor?.right?.isDown) { // right
-            this.flipPlayer(player)
             player?.setVelocityX(PLAYER.SPEED_X)
             if (player?.body.blocked.down) {
                 player.anims.play(ANIM.PLAYER_TO_RIGHT, true)
@@ -35,16 +32,14 @@ export default class Control {
             player.setVelocityY(-PLAYER.SPEED_Y)
             player.anims.play(ANIM.PLAYER_JUMP, true)
         }
-    }
 
-    private static flipPlayer(player?: Player) {
-        if (this._cursor?.left?.isDown && !this._turningLeft && player) {
-            player.flipX = true
-            this._turningLeft = true
-        }
-        if (this._cursor?.right?.isDown && this._turningLeft && player) {
-            player.flipX = false
-            this._turningLeft = false
+        // flip player image
+        if (player) {
+            if (player.body.velocity.x > 0) {
+                player.setFlipX(false)
+            } else if (player.body.velocity.x < 0) {
+                player.setFlipX(true);
+            }
         }
     }
 }
