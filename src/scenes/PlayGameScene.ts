@@ -27,6 +27,13 @@ export default class PlayGameScene extends Phaser.Scene {
         const map = this.make.tilemap({ key: TILEMAP.LEVEL1 })
         const tileset: Phaser.Tilemaps.Tileset = map.addTilesetImage('platformPack_tilesheet', TILESET.PLATFORM)
         const platforms = map.createStaticLayer('platforms', tileset, 0, 200)
+        platforms.setCollisionByExclusion([-1], true)
+
+
+        const player: Phaser.Physics.Arcade.Sprite = this.physics.add.sprite(50, 300, TEXTURE.PLAYER)
+        player.setCollideWorldBounds(true)
+        player.setBounce(0.1)
+        this.physics.add.collider(player, platforms)
 
         Collision.setup(this)
     }
