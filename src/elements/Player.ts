@@ -17,6 +17,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setBounce(PLAYER.BOUNCE)
         this.setCollideWorldBounds(true)
         this.setGravity(PLAYER.GRAVITY_X, PLAYER.GRAVITY_Y)
+        this.setScale(0.9)
         // animations
         this.createAnimations(TEXTURE.PLAYER)
     }
@@ -32,7 +33,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 10,
             repeat: -1 // loop infinitely
         })
-   
+
         this._scene?.anims.create({
             key: ANIM.PLAYER_TO_RIGHT,
             frames: this._scene?.anims.generateFrameNames(playerTexture, {
@@ -63,7 +64,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    reset(){
+    reset() {
         this.setVelocity(0, 0);
         this.setX(PLAYER.START_X);
         this.setY(PLAYER.START_Y);
