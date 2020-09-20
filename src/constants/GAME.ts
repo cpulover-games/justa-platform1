@@ -3,5 +3,5 @@ export const GAME = {
     HEIGHT: 600,
     PHYSIC_SYSTEM: 'arcade',
     GRAVITY: 300,
-    DEBUG: true
+    DEBUG: false
 }

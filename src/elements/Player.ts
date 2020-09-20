@@ -69,8 +69,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setY(300);
         this.play(ANIM.PLAYER_IDLE, true);
         this.setAlpha(0);
-        // animation
-        const teenw = this._scene?.tweens.add({
+        // animation of properties of game object
+        const tween = this._scene?.tweens.add({
             targets: this,
             alpha: 1,
             duration: 100,
