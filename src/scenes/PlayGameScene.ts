@@ -32,7 +32,29 @@ export default class PlayGameScene extends Phaser.Scene {
         const platforms = map.createStaticLayer('platforms', tileset, -95, 200) // layer name set in Tiled [level1.json]
         platforms.setCollisionByExclusion([-1], true)
 
-        this._player= new Player(this)
+        this._player = new Player(this)
+
+        // Create a sprite group for all spikes, set common properties to ensure that
+        // sprites in the group don't move via gravity or by player collisions
+        const spikes = this.physics.add.group({
+            allowGravity: false,
+            immovable: true
+        });
+
+        // Let's get the spike objects, these are NOT sprites
+        const spikeObjects = map.getObjectLayer('spikes')['objects'] as Phaser.Types.Tilemaps.TiledObject[]
+
+        // Now we create spikes in our sprite group for each object in our map
+        spikeObjects.forEach(spikeObject => {
+            // Add new spikes to our sprite group, change the start y position to meet the platform 
+            if (spikeObject.y && spikeObject.height && spikeObject.x) {
+                const spike = spikes.create(spikeObject.x - 95, spikeObject.y + 202 - spikeObject.height, TEXTURE.SPIKE).setOrigin(0, -0) as Phaser.Physics.Arcade.Image
+                // reduce collision size
+                // to keep the bounding box correctly encompassing the spikes we add an offset that matches the height reduction
+                spike.body.setSize(spike.width, spike.height - 20).setOffset(0, 20)
+            }
+
+        });
 
         Collision.setup(this)
         this.physics.add.collider(this._player, platforms)
