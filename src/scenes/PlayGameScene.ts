@@ -6,7 +6,7 @@ import Control from '~/Control'
 
 
 export default class PlayGameScene extends Phaser.Scene {
-    private _gameOver: boolean = false
+    private _gameOver?: string
     private _backgroud?: Phaser.GameObjects.Image
     private _player?: Player
     private _map?: Phaser.Tilemaps.Tilemap
@@ -94,13 +94,13 @@ export default class PlayGameScene extends Phaser.Scene {
         Control.setup(this, this._player)
 
         // game over
-        if (this._gameOver) {
-            return
+        if (this._gameOver=='Win') {
+            this.scene.start(SCENE.GAME_OVER, {text: 'You win!'}) // pass data to next scene
         }
     }
 
     /* GETTERS - SETTERS */
-    set gameOver(state: boolean) {
+    set gameOver(state: string) {
         this._gameOver = state
     }
     get platforms() {

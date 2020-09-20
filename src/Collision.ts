@@ -7,7 +7,10 @@ export default class Collision {
         if (scene.platforms && scene.player && scene.spikes && scene.ports && scene.coins) {
             // add collision and overlapping between elements
             scene.physics.add.collider(scene.player, scene.spikes, this.playerHitsSpike, undefined, scene)
-            scene.physics.add.overlap(scene.player, scene.ports, this.playerEntersPort, undefined, scene)
+            scene.physics.add.overlap(scene.player, scene.ports,
+                function (thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject) {
+                    Collision.playerEntersPort(thePlayer, thePort, scene)
+                }, undefined, scene)
             scene.physics.add.overlap(scene.player, scene.coins, this.playerCollectsCoin, undefined, scene)
             scene.physics.add.collider(scene.player, scene.platforms)
         }
@@ -20,15 +23,11 @@ export default class Collision {
         player.reset()
     }
 
-    static playerEntersPort(thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject) {
+    static playerEntersPort(thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject, scene: PlayGameScene) {
         // cast types
         const player = thePlayer as Player
         const port = thePort as Phaser.Physics.Arcade.Image
-
-        if (Math.abs(player.x - port.x) < 1) {
-            alert("You win")
-            return
-        }
+        scene.gameOver = 'Win'
     }
 
     static playerCollectsCoin(thePlayer: Phaser.GameObjects.GameObject, theCoin: Phaser.GameObjects.GameObject) {
