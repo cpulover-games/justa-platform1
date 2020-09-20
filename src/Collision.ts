@@ -11,7 +11,10 @@ export default class Collision {
                 function (thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject) {
                     Collision.playerEntersPort(thePlayer, thePort, scene)
                 }, undefined, scene)
-            scene.physics.add.overlap(scene.player, scene.coins, this.playerCollectsCoin, undefined, scene)
+            scene.physics.add.overlap(scene.player, scene.coins, 
+                function(thePlayer: Phaser.GameObjects.GameObject, theCoin:Phaser.GameObjects.GameObject){
+                    Collision.playerCollectsCoin(thePlayer, theCoin, scene)
+                }, undefined, scene)
             scene.physics.add.collider(scene.player, scene.platforms)
         }
     }
@@ -30,11 +33,12 @@ export default class Collision {
         scene.gameOver = 'Win'
     }
 
-    static playerCollectsCoin(thePlayer: Phaser.GameObjects.GameObject, theCoin: Phaser.GameObjects.GameObject) {
+    static playerCollectsCoin(thePlayer: Phaser.GameObjects.GameObject, theCoin: Phaser.GameObjects.GameObject, scene: PlayGameScene) {
         // cast types
         const player = thePlayer as Player
         const coin = theCoin as Phaser.Physics.Arcade.Image
 
+        scene.scoreLabel?.addScore(1)
         coin.disableBody(true, true)
     }
 }

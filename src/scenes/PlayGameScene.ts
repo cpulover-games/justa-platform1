@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 import Collision from '~/Collision'
 import Player from '~/elements/Player'
 import Control from '~/Control'
+import ScoreLabel from '~/elements/ScoreLabel'
 
 
 export default class PlayGameScene extends Phaser.Scene {
@@ -15,6 +16,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private _spikes?: Phaser.Physics.Arcade.Group
     private _ports?: Phaser.Physics.Arcade.Group
     private _coins?: Phaser.Physics.Arcade.Group
+    private _scoreLabel?: ScoreLabel
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -41,6 +43,7 @@ export default class PlayGameScene extends Phaser.Scene {
         this._ports=this.createEntityGroup('ports', TEXTURE.PORT)
         this._coins=this.createEntityGroup('coins', TEXTURE.COIN)
         this._player = new Player(this)
+        this._scoreLabel= new ScoreLabel(this,0)
 
         Collision.setup(this)
     }
@@ -95,7 +98,7 @@ export default class PlayGameScene extends Phaser.Scene {
 
         // game over
         if (this._gameOver=='Win') {
-            this.scene.start(SCENE.GAME_OVER, {text: 'You win!'}) // pass data to next scene
+            this.scene.start(SCENE.GAME_OVER, {text: 'You win.', score: this.scoreLabel?.score}) // pass data to next scene
         }
     }
 
@@ -117,5 +120,8 @@ export default class PlayGameScene extends Phaser.Scene {
     }
     get coins(){
         return this._coins
+    }
+    get scoreLabel(){
+        return this._scoreLabel
     }
 }
