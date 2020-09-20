@@ -1,4 +1,4 @@
-import { SCENE, TEXTURE, TILESET, TILEMAP } from '../constants/KEY'
+import { SCENE, TEXTURE, TILESET, TILEMAP, ANIM } from '../constants/KEY'
 import Phaser from 'phaser'
 import Collision from '~/Collision'
 import Player from '~/elements/Player'
@@ -58,6 +58,15 @@ export default class PlayGameScene extends Phaser.Scene {
 
         Collision.setup(this)
         this.physics.add.collider(this._player, platforms)
+        this.physics.add.collider(this._player, spikes, this.playerHitsSpike, undefined, this)
+    }
+
+    playerHitsSpike(thePlayer: Phaser.GameObjects.GameObject, theSpike: Phaser.GameObjects.GameObject) {
+        // cast types
+        const player = thePlayer as Player
+        const spike = theSpike as Phaser.Physics.Arcade.Image
+
+        player.reset()
     }
 
     update() {

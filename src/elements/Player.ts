@@ -62,4 +62,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 10
         })
     }
+
+    reset(){
+        this.setVelocity(0, 0);
+        this.setX(50);
+        this.setY(300);
+        this.play(ANIM.PLAYER_IDLE, true);
+        this.setAlpha(0);
+        // animation
+        const teenw = this._scene?.tweens.add({
+            targets: this,
+            alpha: 1,
+            duration: 100,
+            ease: 'Linear',
+            repeat: 5,
+        });
+    }
 }
