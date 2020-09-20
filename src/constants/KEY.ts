@@ -7,6 +7,7 @@ export const TEXTURE = {
     BACKGROUND: 'background',
     SPIKE: 'spike',
     PORT: 'port',
+    COIN: 'coin',
 
     // sprite
     PLAYER: 'player'

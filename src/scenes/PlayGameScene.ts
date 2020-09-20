@@ -14,6 +14,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private _platforms?: Phaser.Tilemaps.StaticTilemapLayer
     private _spikes?: Phaser.Physics.Arcade.Group
     private _ports?: Phaser.Physics.Arcade.Group
+    private _coins?: Phaser.Physics.Arcade.Group
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -23,6 +24,7 @@ export default class PlayGameScene extends Phaser.Scene {
         this.load.image(TEXTURE.BACKGROUND, 'assets/images/background.png')
         this.load.image(TEXTURE.SPIKE, 'assets/images/spike.png')
         this.load.image(TEXTURE.PORT, 'assets/images/port.png')
+        this.load.image(TEXTURE.COIN, 'assets/images/coin.png')
         this.load.atlas(TEXTURE.PLAYER, 'assets/images/kenney_player.png', 'assets/images/kenney_player_atlas.json')
 
         // tileset
@@ -37,6 +39,7 @@ export default class PlayGameScene extends Phaser.Scene {
         this._platforms = this.createPlatforms()
         this._spikes = this.createEntityGroup('spikes', TEXTURE.SPIKE)
         this._ports=this.createEntityGroup('ports', TEXTURE.PORT)
+        this._coins=this.createEntityGroup('coins', TEXTURE.COIN)
         this._player = new Player(this)
 
         Collision.setup(this)
@@ -111,5 +114,8 @@ export default class PlayGameScene extends Phaser.Scene {
     }
     get ports(){
         return this._ports
+    }
+    get coins(){
+        return this._coins
     }
 }

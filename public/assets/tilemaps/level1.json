@@ -4,7 +4,7 @@
      "export":
         {
          "format":"json",
-         "target":"..\/..\/..\/..\/..\/..\/Desktop\/tile-map\/level1.json"
+         "target":"level1.json"
         }
     },
  "height":8,
@@ -91,9 +91,44 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":8,
+         "name":"coins",
+         "objects":[
+                {
+                 "gid":51,
+                 "height":64,
+                 "id":19,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":192,
+                 "y":256
+                }, 
+                {
+                 "gid":51,
+                 "height":64,
+                 "id":20,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":256,
+                 "y":256
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":15,
+ "nextlayerid":9,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",

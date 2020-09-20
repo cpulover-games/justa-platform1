@@ -4,10 +4,11 @@ import PlayGameScene from './scenes/PlayGameScene';
 export default class Collision {
     static setup(scene: PlayGameScene) {
         // check availabilities of game elements (attributes) in scene
-        if (scene.platforms && scene.player && scene.spikes && scene.ports) {
+        if (scene.platforms && scene.player && scene.spikes && scene.ports && scene.coins) {
             // add collision and overlapping between elements
             scene.physics.add.collider(scene.player, scene.spikes, this.playerHitsSpike, undefined, scene)
             scene.physics.add.overlap(scene.player, scene.ports, this.playerEntersPort, undefined, scene)
+            scene.physics.add.overlap(scene.player, scene.coins, this.playerCollectsCoin, undefined, scene)
             scene.physics.add.collider(scene.player, scene.platforms)
         }
     }
@@ -28,5 +29,13 @@ export default class Collision {
             alert("You win")
             return
         }
+    }
+
+    static playerCollectsCoin(thePlayer: Phaser.GameObjects.GameObject, theCoin: Phaser.GameObjects.GameObject) {
+        // cast types
+        const player = thePlayer as Player
+        const coin = theCoin as Phaser.Physics.Arcade.Image
+
+        coin.disableBody(true, true)
     }
 }
