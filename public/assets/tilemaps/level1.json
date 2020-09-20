@@ -1,90 +1,119 @@
-{
-       "compressionlevel": -1,
-       "height": 7,
-       "infinite": false,
-       "layers": [{
-                     "compression": "",
-                     "data": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAACAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAADwAAAA8AAAAPAAAAEgAAABIAAAASAAAAEgAAABIAAAASAAAAEgAAABIAAAASAAAAEgAAABIAAAASAAAAEgAAABIAAAA=",
-                     "encoding": "base64",
-                     "height": 7,
-                     "id": 1,
-                     "name": "platforms",
-                     "opacity": 1,
-                     "type": "tilelayer",
-                     "visible": true,
-                     "width": 14,
-                     "x": 0,
-                     "y": 0
-              },
-              {
-                     "draworder": "topdown",
-                     "id": 2,
-                     "name": "spikes",
-                     "objects": [{
-                                   "gid": 71,
-                                   "height": 64,
-                                   "id": 2,
-                                   "name": "",
-                                   "rotation": 0,
-                                   "type": "",
-                                   "visible": true,
-                                   "width": 64,
-                                   "x": 446.834008097166,
-                                   "y": 319.093117408907
-                            },
-                            {
-                                   "gid": 71,
-                                   "height": 64,
-                                   "id": 3,
-                                   "name": "",
-                                   "rotation": 0,
-                                   "type": "",
-                                   "visible": true,
-                                   "width": 64,
-                                   "x": 255.093117408907,
-                                   "y": 320.12955465587
-                            },
-                            {
-                                   "gid": 71,
-                                   "height": 64,
-                                   "id": 4,
-                                   "name": "",
-                                   "rotation": 0,
-                                   "type": "",
-                                   "visible": true,
-                                   "width": 64,
-                                   "x": 704.906882591093,
-                                   "y": 126.315789473684
-                            }
-                     ],
-                     "opacity": 1,
-                     "type": "objectgroup",
-                     "visible": true,
-                     "x": 0,
-                     "y": 0
-              }
-       ],
-       "nextlayerid": 3,
-       "nextobjectid": 5,
-       "orientation": "orthogonal",
-       "renderorder": "right-down",
-       "tiledversion": "1.4.2",
-       "tileheight": 64,
-       "tilesets": [{
-              "columns": 14,
-              "firstgid": 1,
-              "image": "..\/..\/Downloads\/stackabuse-platformer\/assets\/tilesets\/platformPack_tilesheet.png",
-              "imageheight": 448,
-              "imagewidth": 896,
-              "margin": 0,
-              "name": "platformPack_tilesheet", 
-              "spacing": 0,
-              "tilecount": 98,
-              "tileheight": 64,
-              "tilewidth": 64
-       }],
-       "tilewidth": 64,
-       "type": "map",
-       "version": 1.4,
-       "width": 14
+{ "compressionlevel":-1,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"json",
+         "target":"..\/..\/..\/..\/..\/..\/Desktop\/tile-map\/level1.json"
+        }
+    },
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 32, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 18, 18, 18, 18, 18, 18, 18, 18, 18, 18],
+         "height":8,
+         "id":5,
+         "name":"platforms",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":6,
+         "name":"spikes",
+         "objects":[
+                {
+                 "gid":71,
+                 "height":64,
+                 "id":10,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":448,
+                 "y":256
+                }, 
+                {
+                 "gid":71,
+                 "height":64,
+                 "id":11,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":320,
+                 "y":384
+                }, 
+                {
+                 "gid":71,
+                 "height":64,
+                 "id":12,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":128,
+                 "y":384
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"ports",
+         "objects":[
+                {
+                 "gid":12,
+                 "height":64,
+                 "id":14,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":576,
+                 "y":192
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":8,
+ "nextobjectid":15,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.4.2",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "columns":14,
+         "firstgid":1,
+         "image":"..\/..\/..\/..\/..\/..\/Downloads\/stackabuse-platformer\/assets\/tilesets\/platformPack_tilesheet.png",
+         "imageheight":448,
+         "imagewidth":896,
+         "margin":0,
+         "name":"platformPack_tilesheet",
+         "spacing":0,
+         "tilecount":98,
+         "tileheight":64,
+         "tilewidth":64
+        }],
+ "tilewidth":64,
+ "type":"map",
+ "version":1.4,
+ "width":10
 }

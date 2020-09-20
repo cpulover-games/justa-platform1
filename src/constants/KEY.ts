@@ -6,8 +6,7 @@ export const TEXTURE = {
     // static
     BACKGROUND: 'background',
     SPIKE: 'spike',
-    TILESET1: 'tileset1',
-    TILEMAP1: 'tilemap1',
+    PORT: 'port',
 
     // sprite
     PLAYER: 'player'

@@ -13,6 +13,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private _tileset?: Phaser.Tilemaps.Tileset
     private _platforms?: Phaser.Tilemaps.StaticTilemapLayer
     private _spikes?: Phaser.Physics.Arcade.Group
+    private _ports?: Phaser.Physics.Arcade.Group
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -21,19 +22,21 @@ export default class PlayGameScene extends Phaser.Scene {
     preload() {
         this.load.image(TEXTURE.BACKGROUND, 'assets/images/background.png')
         this.load.image(TEXTURE.SPIKE, 'assets/images/spike.png')
+        this.load.image(TEXTURE.PORT, 'assets/images/port.png')
         this.load.atlas(TEXTURE.PLAYER, 'assets/images/kenney_player.png', 'assets/images/kenney_player_atlas.json')
 
         // tileset
         this.load.image(TILESET.PLATFORM, 'assets/tilesets/platformPack_tilesheet.png')
         // tilemap
-        this.load.tilemapTiledJSON(TILEMAP.LEVEL1, 'assets/tilemaps/level2.json')
+        this.load.tilemapTiledJSON(TILEMAP.LEVEL1, 'assets/tilemaps/level1.json')
     }
 
     create() {
         this._backgroud = this.createBackgroud()
         this._map = this.createMap()
         this._platforms = this.createPlatforms()
-        this._spikes = this.createSpikes()
+        this._spikes = this.createEntityGroup('spikes', TEXTURE.SPIKE)
+        this._ports=this.createEntityGroup('ports', TEXTURE.PORT)
         this._player = new Player(this)
 
         Collision.setup(this)
@@ -59,29 +62,29 @@ export default class PlayGameScene extends Phaser.Scene {
         }
     }
 
-    createSpikes() {
-        // Create a sprite group for all spikes, set common properties to ensure that
+    createEntityGroup(layerName: string, texture: string) {
+        // Create a sprite group for all entitiess, set common properties to ensure that
         // sprites in the group don't move via gravity or by player collisions
-        const spikes: Phaser.Physics.Arcade.Group = this.physics.add.group({
+        const entityGroup: Phaser.Physics.Arcade.Group = this.physics.add.group({
             allowGravity: false,
             immovable: true
         });
 
-        // Let's get the spike objects, these are NOT sprites
-        const spikeObjects = this._map?.getObjectLayer('spikes')['objects'] as Phaser.Types.Tilemaps.TiledObject[]
+        // Let's get the entity objects, these are NOT sprites
+        const entityObjects = this._map?.getObjectLayer(layerName)['objects'] as Phaser.Types.Tilemaps.TiledObject[]
 
-        // Now we create spikes in our sprite group for each object in our map
-        spikeObjects.forEach(spikeObject => {
-            // Add new spikes to our sprite group, change the start y position to meet the platform 
-            if (spikeObject.y && spikeObject.height && spikeObject.x) {
-                const spike = spikes.create(spikeObject.x, spikeObject.y - spikeObject.height, TEXTURE.SPIKE).setOrigin(0, 0) as Phaser.Physics.Arcade.Image
+        // Now we create entitys in our sprite group for each object in our map
+        entityObjects.forEach(entityObject => {
+            // Add new entitys to our sprite group, change the start y position to meet the platform 
+            if (entityObject.y && entityObject.height && entityObject.x) {
+                const entity = entityGroup.create(entityObject.x, entityObject.y - entityObject.height, texture).setOrigin(0, 0) as Phaser.Physics.Arcade.Image
                 // reduce collision size
-                // to keep the bounding box correctly encompassing the spikes we add an offset that matches the height reduction
-                spike.body.setSize(spike.width, spike.height - 20).setOffset(0, 20)
+                // to keep the bounding box correctly encompassing the entitys we add an offset that matches the height reduction
+                entity.body.setSize(entity.width, entity.height - 20).setOffset(0, 20)
             }
 
         });
-        return spikes
+        return entityGroup
     }
 
     update() {
@@ -105,5 +108,8 @@ export default class PlayGameScene extends Phaser.Scene {
     }
     get spikes() {
         return this._spikes
+    }
+    get ports(){
+        return this._ports
     }
 }
