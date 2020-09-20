@@ -65,8 +65,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     reset(){
         this.setVelocity(0, 0);
-        this.setX(50);
-        this.setY(300);
+        this.setX(PLAYER.START_X);
+        this.setY(PLAYER.START_Y);
         this.play(ANIM.PLAYER_IDLE, true);
         this.setAlpha(0);
         // animation of properties of game object
