@@ -38,7 +38,7 @@ export default class Collision {
         const player = thePlayer as Player
         const coin = theCoin as Phaser.Physics.Arcade.Image
 
-        scene.scoreLabel?.addScore(1)
+        scene.scoreLabel?.addScore(23)
         coin.disableBody(true, true)
     }
 }

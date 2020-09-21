@@ -98,7 +98,7 @@ export default class PlayGameScene extends Phaser.Scene {
 
         // game over
         if (this._gameOver=='Win') {
-            this.scene.start(SCENE.GAME_OVER, {text: 'You win.', score: this.scoreLabel?.score}) // pass data to next scene
+            this.scene.start(SCENE.GAME_OVER, {text: 'You win', score: this.scoreLabel?.score}) // pass data to next scene
         }
     }
 

@@ -1,3 +1,4 @@
+import { GAME } from '../constants/GAME'
 import Phaser from 'phaser'
 import { SCENE } from '../constants/KEY'
 
@@ -11,12 +12,13 @@ export default class GameOverScene extends Phaser.Scene {
 
     init(data) { // get data from previous scene
         this._text = data.text
-        this._score=data.score
+        this._score = data.score
     }
 
     create() {
         if (this._text) {
-            this.add.text(0, 0, this._text +'\nScore: '+ this._score, {fontSize: 70})
+            this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2 - 30, this._text, { fontSize: 70, fontStyle: 'bold' }).setOrigin(0.5)
+            this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2 + 30, 'Score: ' + this._score, { fontSize: 35 }).setOrigin(0.5)
         }
     }
 }
