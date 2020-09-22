@@ -28,7 +28,8 @@
 	},
 	"dependencies": {
 		"main": "^1000.0.1",
-		"phaser": "^3.24.1"
+		"phaser": "^3.24.1",
+		"phaser3-rex-plugins": "^1.1.29"
 	},
 	"parcelCleanPaths": [
 		"dist"

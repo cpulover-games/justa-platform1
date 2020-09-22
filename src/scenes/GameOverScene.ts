@@ -1,4 +1,3 @@
-import { GAME } from '../constants/GAME'
 import Phaser from 'phaser'
 import { SCENE } from '../constants/KEY'
 
@@ -17,8 +16,9 @@ export default class GameOverScene extends Phaser.Scene {
 
     create() {
         if (this._text) {
-            this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2 - 30, this._text, { fontSize: 70, fontStyle: 'bold' }).setOrigin(0.5)
-            this.add.text(GAME.WIDTH / 2, GAME.HEIGHT / 2 + 30, 'Score: ' + this._score, { fontSize: 35 }).setOrigin(0.5)
+            // origin 0.5 to center text, use unary + operator to convert string to number
+            this.add.text(+this.game.config.width / 2, +this.game.config.height / 2 - 30, this._text, { fontSize: 70, fontStyle: 'bold' }).setOrigin(0.5)
+            this.add.text(+this.game.config.width / 2, +this.game.config.height / 2 + 30, 'Score: ' + this._score, { fontSize: 35 }).setOrigin(0.5)
         }
     }
 }

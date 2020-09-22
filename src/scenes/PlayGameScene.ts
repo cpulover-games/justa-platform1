@@ -1,10 +1,11 @@
+import OutlineEffectLayer from 'phaser3-rex-plugins/plugins/outlineeffectlayer-plugin.js';
+
 import { SCENE, TEXTURE, TILESET, TILEMAP, ANIM } from '../constants/KEY'
 import Phaser from 'phaser'
 import Collision from '~/Collision'
 import Player from '~/elements/Player'
 import Control from '~/Control'
 import ScoreLabel from '~/elements/ScoreLabel'
-
 
 export default class PlayGameScene extends Phaser.Scene {
     private _gameOver?: string
@@ -17,6 +18,12 @@ export default class PlayGameScene extends Phaser.Scene {
     private _ports?: Phaser.Physics.Arcade.Group
     private _coins?: Phaser.Physics.Arcade.Group
     private _scoreLabel?: ScoreLabel
+
+    private copyingCoin: boolean = false
+    private coinShadow?: Phaser.GameObjects.Image
+    private cointTemplate?: Phaser.GameObjects.Image
+    private pointer?: Phaser.Input.Pointer
+    private effectLayer?:OutlineEffectLayer
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -33,19 +40,53 @@ export default class PlayGameScene extends Phaser.Scene {
         this.load.image(TILESET.PLATFORM, 'assets/tilesets/platformPack_tilesheet.png')
         // tilemap
         this.load.tilemapTiledJSON(TILEMAP.LEVEL1, 'assets/tilemaps/level1.json')
+
+        this.load.plugin('rexoutlineeffectlayerplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexoutlineeffectlayerplugin.min.js', true)
     }
 
     create() {
+        console.log(this.game.device.os)
+
         this._backgroud = this.createBackgroud()
         this._map = this.createMap()
         this._platforms = this.createPlatforms()
         this._spikes = this.createEntityGroup('spikes', TEXTURE.SPIKE)
-        this._ports=this.createEntityGroup('ports', TEXTURE.PORT)
-        this._coins=this.createEntityGroup('coins', TEXTURE.COIN)
+        this._ports = this.createEntityGroup('ports', TEXTURE.PORT)
+        this._coins = this.createEntityGroup('coins', TEXTURE.COIN)
         this._player = new Player(this)
-        this._scoreLabel= new ScoreLabel(this,0)
+        this._scoreLabel = new ScoreLabel(this, 0)
+
+        this.effectLayer = this.add.rexOutlineEffectLayer({
+            knockout: true,
+            outlineColor: 0xff0000,
+            thickness: 3
+        })
+            .setDepth(1);
+
+        this.input.on('pointerdown', (pointer) => {
+            var touchX = pointer.x;
+            var touchY = pointer.y;
+            console.log(`touchX: ${touchX} -  touchY: ${touchY}`)
+
+            if (this.copyingCoin && !this.clickInsideCoinTemplate(touchX, touchY)) { //TODO: exclude when click the coin template
+                const newCoint = this.coins?.create(touchX - 22, touchY - 17, TEXTURE.COIN).setOrigin(0, 0) as Phaser.Physics.Arcade.Image
+                this.enableDrag(newCoint)
+                // this.copyingCoin=false
+            }
+        });
+
+        this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
+        this.pointer = this.input.activePointer;
 
         Collision.setup(this)
+    }
+
+    clickInsideCoinTemplate(x: number, y: number) {
+        if (x > 185 && x < 239 && y > 122 && y < 161) {
+            return true
+        } else {
+            return false
+        }
     }
 
     createBackgroud() {
@@ -87,18 +128,40 @@ export default class PlayGameScene extends Phaser.Scene {
                 // reduce collision size
                 // to keep the bounding box correctly encompassing the entitys we add an offset that matches the height reduction
                 entity.body.setSize(entity.width, entity.height - 20).setOffset(0, 20)
+
+                // this.enableDrag(entity)
+
+                entity.setInteractive().on('pointerdown', (pointer, localX, localY, event) => {
+                    this.copyingCoin = true
+                });
             }
 
         });
         return entityGroup
     }
 
+    enableDrag(entity: Phaser.Physics.Arcade.Image) {
+        entity.setInteractive({ draggable: true })
+            .on('dragstart', function (pointer, dragX, dragY) {
+                // ...
+            })
+            .on('drag', function (pointer, dragX, dragY) {
+                entity.setPosition(dragX, dragY);
+            })
+            .on('dragend', function (pointer, dragX, dragY, dropped) {
+                // ...
+            })
+    }
+
     update() {
-        Control.setup(this, this._player)
+        Control.setup(this, this.player)
+        if (this.copyingCoin) {
+            this.coinShadow?.setPosition(this.pointer?.position.x, this.pointer?.position.y)
+        }
 
         // game over
-        if (this._gameOver=='Win') {
-            this.scene.start(SCENE.GAME_OVER, {text: 'You win', score: this.scoreLabel?.score}) // pass data to next scene
+        if (this._gameOver == 'Win') {
+            this.scene.start(SCENE.GAME_OVER, { text: 'You win', score: this.scoreLabel?.score }) // pass data to next scene
         }
     }
 
@@ -115,13 +178,13 @@ export default class PlayGameScene extends Phaser.Scene {
     get spikes() {
         return this._spikes
     }
-    get ports(){
+    get ports() {
         return this._ports
     }
-    get coins(){
+    get coins() {
         return this._coins
     }
-    get scoreLabel(){
+    get scoreLabel() {
         return this._scoreLabel
     }
 }
