@@ -23,7 +23,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private coinShadow?: Phaser.GameObjects.Image
     private cointTemplate?: Phaser.GameObjects.Image
     private pointer?: Phaser.Input.Pointer
-    private effectLayer?:OutlineEffectLayer
+    private effectLayer?: OutlineEffectLayer
 
     constructor() {
         super(SCENE.LEVEL1)
@@ -56,24 +56,31 @@ export default class PlayGameScene extends Phaser.Scene {
         this._player = new Player(this)
         this._scoreLabel = new ScoreLabel(this, 0)
 
-        this.effectLayer = this.add.rexOutlineEffectLayer({
-            knockout: true,
-            outlineColor: 0xff0000,
-            thickness: 3
-        })
-            .setDepth(1);
+        // this.effectLayer = this.add.rexOutlineEffectLayer({
+        //     knockout: true,
+        //     outlineColor: 0xff0000,
+        //     thickness: 3
+        // })
+        //     .setDepth(1);
 
         this.input.on('pointerdown', (pointer) => {
             var touchX = pointer.x;
             var touchY = pointer.y;
             console.log(`touchX: ${touchX} -  touchY: ${touchY}`)
 
-            if (this.copyingCoin && !this.clickInsideCoinTemplate(touchX, touchY)) { //TODO: exclude when click the coin template
+            if (this.copyingCoin && !this.insideCoinTemplate(touchX, touchY) && touchY < 369) { //TODO: exclude when click the coin template
                 const newCoint = this.coins?.create(touchX - 22, touchY - 17, TEXTURE.COIN).setOrigin(0, 0) as Phaser.Physics.Arcade.Image
                 this.enableDrag(newCoint)
-                // this.copyingCoin=false
+            } else if (this.insideCoinTemplate(touchX, touchY)) {
+                this.copyingCoin = true
+            } else if (this.insideCancelTemplate(touchX, touchY)) {
+                this.cancelCopy()
             }
         });
+
+        // template images
+        this.add.image(34, 479, TEXTURE.COIN)
+        this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
 
         this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
         this.pointer = this.input.activePointer;
@@ -81,12 +88,24 @@ export default class PlayGameScene extends Phaser.Scene {
         Collision.setup(this)
     }
 
-    clickInsideCoinTemplate(x: number, y: number) {
-        if (x > 185 && x < 239 && y > 122 && y < 161) {
+    insideCoinTemplate(x: number, y: number) {
+        if (x > 2 && x < 62 && y > 449 && y < 506) {
             return true
         } else {
             return false
         }
+    }
+
+    insideCancelTemplate(x: number, y: number) {
+        if (x > 578 && x < 635 && y > 449 && y < 506) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    cancelCopy() {
+        this.copyingCoin = false
     }
 
     createBackgroud() {
@@ -105,6 +124,8 @@ export default class PlayGameScene extends Phaser.Scene {
         if (this._tileset) {
             const platforms = this._map?.createStaticLayer('platforms', this._tileset, 0, 0) // layer name set in Tiled [level1.json]
             platforms?.setCollisionByExclusion([-1], true)
+
+
             return platforms
         }
     }
@@ -129,11 +150,7 @@ export default class PlayGameScene extends Phaser.Scene {
                 // to keep the bounding box correctly encompassing the entitys we add an offset that matches the height reduction
                 entity.body.setSize(entity.width, entity.height - 20).setOffset(0, 20)
 
-                // this.enableDrag(entity)
-
-                entity.setInteractive().on('pointerdown', (pointer, localX, localY, event) => {
-                    this.copyingCoin = true
-                });
+                this.enableDrag(entity)
             }
 
         });
@@ -141,22 +158,40 @@ export default class PlayGameScene extends Phaser.Scene {
     }
 
     enableDrag(entity: Phaser.Physics.Arcade.Image) {
+        let originalX
+        let originalY
         entity.setInteractive({ draggable: true })
-            .on('dragstart', function (pointer, dragX, dragY) {
+            .on('dragstart', function (pointer: Phaser.Input.Pointer, dragX, dragY) {
                 // ...
+                originalX = entity.x
+                originalY = entity.y
             })
-            .on('drag', function (pointer, dragX, dragY) {
-                entity.setPosition(dragX, dragY);
+            .on('drag', function (pointer: Phaser.Input.Pointer, dragX, dragY) {
+                entity.setPosition(dragX, dragY)
+                if (pointer.position.y > 369) {
+                    entity.setTint(0xff0000)
+                } else {
+                    entity.clearTint()
+                }
             })
-            .on('dragend', function (pointer, dragX, dragY, dropped) {
+            .on('dragend', function (pointer: Phaser.Input.Pointer, dragX, dragY, dropped) {
                 // ...
+                if (pointer.position.y > 369) {
+                    entity.setPosition(originalX, originalY)
+                    entity.clearTint()
+                } 
             })
     }
 
     update() {
         Control.setup(this, this.player)
-        if (this.copyingCoin) {
-            this.coinShadow?.setPosition(this.pointer?.position.x, this.pointer?.position.y)
+
+        if (this.copyingCoin && this.pointer) {
+            if (this.pointer.position.y < 369) {
+                this.coinShadow?.setPosition(this.pointer?.position.x, this.pointer?.position.y).setAlpha(0.5)
+            } else {
+                this.coinShadow?.setAlpha(0)
+            }
         }
 
         // game over
