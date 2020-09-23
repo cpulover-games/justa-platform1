@@ -85,15 +85,14 @@ export default class PlayGameScene extends Phaser.Scene {
             }
         });
 
-        this.game.events.on('blur',()=> {
-            console.log("Window is blurred")
+        this.game.events.on('blur', () => {
             this.scene.pause()
         })
-        this.game.events.on('focus',()=> {
-            console.log("Window is focused")
-            this.scene.resume()
-        })       
-
+        this.game.events.on('focus', () => {
+            if (this.scene.isPaused()) {
+                this.scene.resume()
+            }
+        })
 
         Collision.setup(this)
     }
@@ -170,7 +169,7 @@ export default class PlayGameScene extends Phaser.Scene {
     enableDrag(entity: Phaser.Physics.Arcade.Image) {
         let originalX
         let originalY
-        entity.setInteractive({ draggable: true, useHandCursor: true  })
+        entity.setInteractive({ draggable: true, useHandCursor: true })
             .on('dragstart', function (pointer: Phaser.Input.Pointer, dragX, dragY) {
                 // ...
                 originalX = entity.x
@@ -189,7 +188,7 @@ export default class PlayGameScene extends Phaser.Scene {
                 if (pointer.position.y > 369) {
                     entity.setPosition(originalX, originalY)
                     entity.clearTint()
-                } 
+                }
             })
     }
 
@@ -206,7 +205,8 @@ export default class PlayGameScene extends Phaser.Scene {
 
         // game over
         if (this._gameOver == 'Win') {
-            this._gameOver='' // clear state in case restarting from game over scene
+            this._gameOver = '' // clear state in case restarting from game over scene
+
             this.scene.start(SCENE.GAME_OVER, { text: 'You win', score: this.scoreLabel?.score }) // pass data to next scene
         }
     }
