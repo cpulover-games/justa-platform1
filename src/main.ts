@@ -1,4 +1,3 @@
-import { GAME } from './constants/GAME'
 import Phaser from 'phaser'
 import OutlineEffectLayerPlugin from 'phaser3-rex-plugins/plugins/outlineeffectlayer-plugin.js';
 
@@ -8,14 +7,14 @@ import GameOverScene from './scenes/GameOverScene'
 
 const config: Phaser.Types.Core.GameConfig = {
 	type: Phaser.AUTO,
-	width: GAME.WIDTH,
-	height: GAME.HEIGHT,
+	width: 64 * 10, // tile width * width
+	height: 64 * 8, // tile height * height
 	scene: [PlayGameScene, GameOverScene],
 	physics: {
-		default: GAME.PHYSIC_SYSTEM,
+		default: 'arcade',
 		arcade: {
-			gravity: { y: GAME.GRAVITY },
-			debug: GAME.DEBUG
+			gravity: { y: 300 },
+			debug: false
 		}
 	},
 	plugins: {

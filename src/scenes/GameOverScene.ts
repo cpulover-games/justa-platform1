@@ -27,9 +27,10 @@ export default class GameOverScene extends Phaser.Scene {
             restartButton.setInteractive({ useHandCursor: true })
                 .on('pointerover', () => restartButton.setColor('red'))
                 .on('pointerout', () => restartButton.setColor('white'))
-                .on('pointerdown', () => { 
+                .on('pointerdown', () => {
                     this.registry.destroy()
-                    this.scene.start(SCENE.LEVEL1) })
+                    this.scene.start(SCENE.LEVEL1)
+                })
 
 
         }
