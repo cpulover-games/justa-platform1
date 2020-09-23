@@ -58,6 +58,10 @@ export default class PlayGameScene extends Phaser.Scene {
         this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
         this.pointer = this.input.activePointer;
 
+        this.cameras.main.setBounds(0, 0, this._backgroud.displayWidth, this._backgroud.displayHeight)
+        this.cameras.main.startFollow(this._player)
+        this.physics.world.setBounds(0, 0, this._backgroud.displayWidth, this._backgroud.displayHeight);
+
         // template images
         // this.add.image(34, 479, TEXTURE.COIN)
         // this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
@@ -119,7 +123,7 @@ export default class PlayGameScene extends Phaser.Scene {
 
     createBackgroud() {
         const background: Phaser.GameObjects.Image = this.add.image(0, 0, TEXTURE.BACKGROUND).setOrigin(0, 0)
-        background.setScale(1, 0.6)
+        background.setDisplaySize(64 * 19, +this.game.config.height)
         return background
     }
 
