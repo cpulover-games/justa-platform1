@@ -6,6 +6,8 @@ import Collision from '~/Collision'
 import Player from '~/elements/Player'
 import Control from '~/Control'
 import ScoreLabel from '~/elements/ScoreLabel'
+import TextLabel from '~/elements/TextLabel';
+import { PLAYER } from '~/constants/ELEMENT';
 
 export default class PlayGameScene extends Phaser.Scene {
     private _gameOver?: string
@@ -18,6 +20,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private _ports?: Phaser.Physics.Arcade.Group
     private _coins?: Phaser.Physics.Arcade.Group
     private _scoreLabel?: ScoreLabel
+    private _livesLabel?: TextLabel
 
     private copyingCoin: boolean = false
     private coinShadow?: Phaser.GameObjects.Image
@@ -55,6 +58,8 @@ export default class PlayGameScene extends Phaser.Scene {
         this._coins = this.createEntityGroup('coins', TEXTURE.COIN)
         this._player = new Player(this)
         this._scoreLabel = new ScoreLabel(this, 0)
+        this._livesLabel= new TextLabel(this, 16,50, `Lives: ${PLAYER.LIVES}`, { fontSize: '30px',
+        color: '#000'})
         this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
         this.pointer = this.input.activePointer;
 
@@ -213,6 +218,10 @@ export default class PlayGameScene extends Phaser.Scene {
 
             this.scene.start(SCENE.GAME_OVER, { text: 'You win', score: this.scoreLabel?.score }) // pass data to next scene
         }
+
+        if (this.player?.lives==0){
+            this.scene.start(SCENE.GAME_OVER, { text: 'Game over', score: this.scoreLabel?.score }) 
+        }
     }
 
     /* GETTERS - SETTERS */
@@ -236,5 +245,8 @@ export default class PlayGameScene extends Phaser.Scene {
     }
     get scoreLabel() {
         return this._scoreLabel
+    }
+    get livesLabel(){
+        return this._livesLabel
     }
 }

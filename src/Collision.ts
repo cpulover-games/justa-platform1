@@ -6,7 +6,10 @@ export default class Collision {
         // check availabilities of game elements (attributes) in scene
         if (scene.platforms && scene.player && scene.spikes && scene.ports && scene.coins) {
             // add collision and overlapping between elements
-            scene.physics.add.collider(scene.player, scene.spikes, this.playerHitsSpike, undefined, scene)
+            scene.physics.add.collider(scene.player, scene.spikes, 
+                function (thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject) {
+                    Collision.playerHitsSpike(thePlayer, thePort, scene)
+                }, undefined, scene)
             scene.physics.add.overlap(scene.player, scene.ports,
                 function (thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject) {
                     Collision.playerEntersPort(thePlayer, thePort, scene)
@@ -20,10 +23,11 @@ export default class Collision {
     }
 
     /* HANDLERS */
-    static playerHitsSpike(thePlayer: Phaser.GameObjects.GameObject, theSpike: Phaser.GameObjects.GameObject) {
+    static playerHitsSpike(thePlayer: Phaser.GameObjects.GameObject, theSpike: Phaser.GameObjects.GameObject, scene: PlayGameScene) {
         // cast types
         const player = thePlayer as Player
-        player.reset()
+        player.die()
+        scene.livesLabel?.setText(`Lives: ${player.lives}`)
     }
 
     static playerEntersPort(thePlayer: Phaser.GameObjects.GameObject, thePort: Phaser.GameObjects.GameObject, scene: PlayGameScene) {

@@ -5,10 +5,12 @@ import PlayGameScene from '~/scenes/PlayGameScene'
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     private _scene?: PlayGameScene
+    private _lives?: integer
 
     constructor(scene: PlayGameScene) {
         super(scene, PLAYER.START_X, PLAYER.START_Y, TEXTURE.PLAYER)
         this._scene = scene
+        this._lives = PLAYER.LIVES
 
         scene.add.existing(this)
 
@@ -65,7 +67,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         })
     }
 
-    reset() {
+    get lives() {
+        return this._lives
+    }
+
+    // die() {
+    //     if (this._lives) {
+    //         this._lives--
+    //     }
+    // }
+
+    die() {
+        if (this._lives) {
+            this._lives--
+        }
+
         this.setVelocity(0, 0);
         this.setX(PLAYER.START_X);
         this.setY(PLAYER.START_Y);
