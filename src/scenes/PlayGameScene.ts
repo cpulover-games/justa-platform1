@@ -79,8 +79,8 @@ export default class PlayGameScene extends Phaser.Scene {
         });
 
         // template images
-        this.add.image(34, 479, TEXTURE.COIN)
-        this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
+        // this.add.image(34, 479, TEXTURE.COIN)
+        // this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
 
         this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
         this.pointer = this.input.activePointer;
@@ -160,7 +160,7 @@ export default class PlayGameScene extends Phaser.Scene {
     enableDrag(entity: Phaser.Physics.Arcade.Image) {
         let originalX
         let originalY
-        entity.setInteractive({ draggable: true })
+        entity.setInteractive({ draggable: true, useHandCursor: true  })
             .on('dragstart', function (pointer: Phaser.Input.Pointer, dragX, dragY) {
                 // ...
                 originalX = entity.x
@@ -196,6 +196,7 @@ export default class PlayGameScene extends Phaser.Scene {
 
         // game over
         if (this._gameOver == 'Win') {
+            this._gameOver='' // clear state in case restarting from game over scene
             this.scene.start(SCENE.GAME_OVER, { text: 'You win', score: this.scoreLabel?.score }) // pass data to next scene
         }
     }

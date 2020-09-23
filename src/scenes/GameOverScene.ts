@@ -16,9 +16,22 @@ export default class GameOverScene extends Phaser.Scene {
 
     create() {
         if (this._text) {
-            // origin 0.5 to center text, use unary + operator to convert string to number
-            this.add.text(+this.game.config.width / 2, +this.game.config.height / 2 - 30, this._text, { fontSize: 70, fontStyle: 'bold' }).setOrigin(0.5)
-            this.add.text(+this.game.config.width / 2, +this.game.config.height / 2 + 30, 'Score: ' + this._score, { fontSize: 35 }).setOrigin(0.5)
+            // use unary + operator to convert string to number
+            const sceneWidth = +this.game.config.width
+            const sceneHeight = +this.game.config.height
+            // origin 0.5 to center text
+            this.add.text(sceneWidth / 2, sceneHeight / 2 - 50, this._text, { fontSize: 70, fontStyle: 'bold' }).setOrigin(0.5)
+            this.add.text(sceneWidth / 2, sceneHeight / 2, 'Score: ' + this._score, { fontSize: 35 }).setOrigin(0.5)
+
+            const restartButton: Phaser.GameObjects.Text = this.add.text(sceneWidth / 2, sceneHeight / 2 + 80, 'Play again', { fontSize: 35 }).setOrigin(0.5)
+            restartButton.setInteractive({ useHandCursor: true })
+                .on('pointerover', () => restartButton.setColor('red'))
+                .on('pointerout', () => restartButton.setColor('white'))
+                .on('pointerdown', () => { 
+                    this.registry.destroy()
+                    this.scene.start(SCENE.LEVEL1) })
+
+
         }
     }
 }
