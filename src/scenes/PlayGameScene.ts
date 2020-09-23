@@ -55,6 +55,12 @@ export default class PlayGameScene extends Phaser.Scene {
         this._coins = this.createEntityGroup('coins', TEXTURE.COIN)
         this._player = new Player(this)
         this._scoreLabel = new ScoreLabel(this, 0)
+        this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
+        this.pointer = this.input.activePointer;
+
+        // template images
+        // this.add.image(34, 479, TEXTURE.COIN)
+        // this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
 
         // this.effectLayer = this.add.rexOutlineEffectLayer({
         //     knockout: true,
@@ -63,6 +69,7 @@ export default class PlayGameScene extends Phaser.Scene {
         // })
         //     .setDepth(1);
 
+        /* EVENTS */
         this.input.on('pointerdown', (pointer) => {
             var touchX = pointer.x;
             var touchY = pointer.y;
@@ -78,12 +85,15 @@ export default class PlayGameScene extends Phaser.Scene {
             }
         });
 
-        // template images
-        // this.add.image(34, 479, TEXTURE.COIN)
-        // this.add.image(96, 469, TEXTURE.SPIKE).setScale(0.7, 0.8)
+        this.game.events.on('blur',()=> {
+            console.log("Window is blurred")
+            this.scene.pause()
+        })
+        this.game.events.on('focus',()=> {
+            console.log("Window is focused")
+            this.scene.resume()
+        })       
 
-        this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
-        this.pointer = this.input.activePointer;
 
         Collision.setup(this)
     }

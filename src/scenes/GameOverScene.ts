@@ -31,8 +31,6 @@ export default class GameOverScene extends Phaser.Scene {
                     this.registry.destroy()
                     this.scene.start(SCENE.LEVEL1)
                 })
-
-
         }
     }
 }
