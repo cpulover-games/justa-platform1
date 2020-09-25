@@ -29,7 +29,7 @@ export default class GameOverScene extends Phaser.Scene {
                 .on('pointerout', () => restartButton.setColor('white'))
                 .on('pointerdown', () => {
                     this.registry.destroy()
-                    this.scene.start(SCENE.LEVEL1)
+                    this.scene.start('playGame', { currentLevel: 1, score: 0, lives: 3})
                 })
         }
     }

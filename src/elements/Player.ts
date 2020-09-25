@@ -7,10 +7,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     private _scene?: PlayGameScene
     private _lives?: integer
 
-    constructor(scene: PlayGameScene) {
+    constructor(scene: PlayGameScene, lives: integer) {
         super(scene, PLAYER.START_X, PLAYER.START_Y, TEXTURE.PLAYER)
         this._scene = scene
-        this._lives = PLAYER.LIVES
+        this._lives = lives
+        console.log("Lives:"+this._lives)
 
         scene.add.existing(this)
 
@@ -70,6 +71,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     get lives() {
         return this._lives
     }
+    
+    // set lives(lives:integer){
+    //     this._lives=lives
+    // }
 
     // die() {
     //     if (this._lives) {

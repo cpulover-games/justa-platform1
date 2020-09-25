@@ -20,6 +20,11 @@ export default class ScoreLabel extends TextLabel {
         return this._score
     }
 
+    set score(score:integer){
+        this._score=score
+        this.updateLabel()
+    }
+
     addScore(score: integer) {
         this._score += score
         this.updateLabel()

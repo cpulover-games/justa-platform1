@@ -9,7 +9,14 @@ import ScoreLabel from '~/elements/ScoreLabel'
 import TextLabel from '~/elements/TextLabel';
 import { PLAYER } from '~/constants/ELEMENT';
 
+export const MAX_LEVEL: integer = 2
 export default class PlayGameScene extends Phaser.Scene {
+    // level state (belongs to each level)
+    // private _mapFile:string='assets/tilemaps/level1.json'
+    private _currentLevel: integer = 1
+    private _playerLives: integer = 3
+    private _score: integer = 0
+
     private _gameOver?: string
     private _backgroud?: Phaser.GameObjects.Image
     private _player?: Player
@@ -21,6 +28,7 @@ export default class PlayGameScene extends Phaser.Scene {
     private _coins?: Phaser.Physics.Arcade.Group
     private _scoreLabel?: ScoreLabel
     private _livesLabel?: TextLabel
+    private _levelLabel?: TextLabel
 
     private copyingCoin: boolean = false
     private coinShadow?: Phaser.GameObjects.Image
@@ -29,7 +37,18 @@ export default class PlayGameScene extends Phaser.Scene {
     private effectLayer?: OutlineEffectLayer
 
     constructor() {
-        super(SCENE.LEVEL1)
+        super('playGame')
+    }
+
+    init(data) {
+        if (data.currentLevel) {
+            this._currentLevel = data.currentLevel
+            this._playerLives = data.lives
+            this._score = data.score
+            // this._mapFile=`assets/tilemaps/level${this._currentLevel}.json`
+            // console.log(this._mapFile)
+            // this.load.tilemapTiledJSON(`level${this._currentLevel}`, this._mapFile)
+        }
     }
 
     preload() {
@@ -42,7 +61,11 @@ export default class PlayGameScene extends Phaser.Scene {
         // tileset
         this.load.image(TILESET.PLATFORM, 'assets/tilesets/platformPack_tilesheet.png')
         // tilemap
-        this.load.tilemapTiledJSON(TILEMAP.LEVEL1, 'assets/tilemaps/level1.json')
+        // this.load.tilemapTiledJSON(TILEMAP.LEVEL1, 'assets/tilemaps/level1.json')
+        for (let level = 1; level <= MAX_LEVEL; level++) {
+            this.load.tilemapTiledJSON(`level${level}`, `assets/tilemaps/level${level}.json`)
+            // this.load.tilemapTiledJSON('level2', 'assets/tilemaps/level2.json')
+        }
 
         this.load.plugin('rexoutlineeffectlayerplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexoutlineeffectlayerplugin.min.js', true)
     }
@@ -56,10 +79,17 @@ export default class PlayGameScene extends Phaser.Scene {
         this._spikes = this.createEntityGroup('spikes', TEXTURE.SPIKE)
         this._ports = this.createEntityGroup('ports', TEXTURE.PORT)
         this._coins = this.createEntityGroup('coins', TEXTURE.COIN)
-        this._player = new Player(this)
-        this._scoreLabel = new ScoreLabel(this, 0)
-        this._livesLabel= new TextLabel(this, 16,50, `Lives: ${PLAYER.LIVES}`, { fontSize: '30px',
-        color: '#000'})
+        this._player = new Player(this, this._playerLives)
+        this.enableDrag(this._player)
+        this._scoreLabel = new ScoreLabel(this, this._score)
+        this._livesLabel = new TextLabel(this, 16, 53, `Lives: ${this._playerLives}`, {
+            fontSize: '30px',
+            color: '#000'
+        })
+        this._levelLabel = new TextLabel(this, 16, 90, `Level: ${this._currentLevel}`, {
+            fontSize: '30px',
+            color: '#000'
+        })
         this.coinShadow = this.add.image(-100, -100, TEXTURE.COIN).setOrigin(0.5).setAlpha(0.5)
         this.pointer = this.input.activePointer;
 
@@ -133,7 +163,7 @@ export default class PlayGameScene extends Phaser.Scene {
     }
 
     createMap() {
-        const map: Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: TILEMAP.LEVEL1 })
+        const map: Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: `level${this._currentLevel}` })
         this._tileset = map.addTilesetImage('platformPack_tilesheet', TILESET.PLATFORM) // tileset name set in Tiled [level1.json]
         return map
     }
@@ -175,7 +205,7 @@ export default class PlayGameScene extends Phaser.Scene {
         return entityGroup
     }
 
-    enableDrag(entity: Phaser.Physics.Arcade.Image) {
+    enableDrag(entity: Phaser.Physics.Arcade.Image | Phaser.Physics.Arcade.Sprite) {
         let originalX
         let originalY
         entity.setInteractive({ draggable: true, useHandCursor: true })
@@ -219,8 +249,8 @@ export default class PlayGameScene extends Phaser.Scene {
             this.scene.start(SCENE.GAME_OVER, { text: 'You win', score: this.scoreLabel?.score }) // pass data to next scene
         }
 
-        if (this.player?.lives==0){
-            this.scene.start(SCENE.GAME_OVER, { text: 'Game over', score: this.scoreLabel?.score }) 
+        if (this.player?.lives == 0) {
+            this.scene.start(SCENE.GAME_OVER, { text: 'Game over', score: this.scoreLabel?.score })
         }
     }
 
@@ -246,7 +276,10 @@ export default class PlayGameScene extends Phaser.Scene {
     get scoreLabel() {
         return this._scoreLabel
     }
-    get livesLabel(){
+    get livesLabel() {
         return this._livesLabel
+    }
+    get currentLevel() {
+        return this._currentLevel
     }
 }
